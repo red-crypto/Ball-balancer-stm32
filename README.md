@@ -1,5 +1,5 @@
 # Ball balancer stm32 inspired by aaedmusa
 
-![Project Logo](logo.png)
+![Project Logo](ball-balancer-test.gif)
 
 ## test
