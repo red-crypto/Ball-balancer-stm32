@@ -2,13 +2,13 @@
 
 This project involves porting code written in Arduino C++ to STM32-based C language
 
-##Details
+## Details
 There are 3 chainges : 
  - Recalculated the inverse kinematics for 3-RRS model
  - Made the TMC2209 library applicable to TMC2208
  - Can control step motor using UART communication
 
-##Video
+## Video
 ![Project Logo](ball-balancer-test.gif)
 
 
