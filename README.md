@@ -1,6 +1,6 @@
 # Ball balancer stm32 inspired by aaedmusa
 
-"Ball balancer" is a 3DOF Stewart platform designed to control the balance of objects.
+"Ball balancer stm32" is a 3DOF Stewart platform for stm32 eval board(stm32f103rb-nucleo)
 
 ![Project Logo](ball-balancer-test.gif)
 
