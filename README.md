@@ -1,8 +1,18 @@
 # Ball balancer stm32 inspired by aaedmusa
 
-"Ball balancer stm32" is a 3DOF Stewart platform for stm32 eval board(stm32f103rb-nucleo)
+This project involves porting code written in Arduino C++ to STM32-based C language
 
+##Details
+There are 3 chainges : 
+ - Recalculated the inverse kinematics for 3-RRS model
+ - Made the TMC2209 library applicable to TMC2208
+ - Can control step motor using UART communication
+
+##Video
 ![Project Logo](ball-balancer-test.gif)
+
+
+
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
