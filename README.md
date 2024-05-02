@@ -11,7 +11,8 @@ There are 3 changes :
 ## Video
 ![Project Logo](ball-balancer-test.gif)
 
-
+## Changelog
+-2024.05.02 Refactoring
 
 
 ## Acknowledgements
