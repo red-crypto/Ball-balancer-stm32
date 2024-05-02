@@ -12,8 +12,8 @@ There are 3 changes :
 ![Project Logo](ball-balancer-test.gif)
 
 ## Changelog
--2024.05.02 Refactoring
-
+- 2024-04-21 First Release
+- 2024-05-02 Refactoring
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
