@@ -20,7 +20,7 @@ static bool is_open[UART_MAX_CH];
 
 static qbuffer_t qbuffer[UART_MAX_CH];
 static uint8_t rx_buf[256];
-
+static uint8_t rx_data[UART_MAX_CH];
 
 bool uartInit(void)
 {
@@ -42,7 +42,7 @@ bool uartOpen(uint8_t ch, uint32_t baud)
 	  case 0:
 
 		  huart1.Instance = USART1;
-		  huart1.Init.BaudRate = 115200;
+		  huart1.Init.BaudRate = baud;
 		  huart1.Init.WordLength = UART_WORDLENGTH_8B;
 		  huart1.Init.StopBits = UART_STOPBITS_1;
 		  huart1.Init.Parity = UART_PARITY_NONE;
@@ -50,30 +50,59 @@ bool uartOpen(uint8_t ch, uint32_t baud)
 		  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 		  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
 
+	      HAL_UART_DeInit(&huart1);
 
-	  	  break;
+	      qbufferCreate(&qbuffer[ch], &rx_buf[0], 256);
+
+	      if (HAL_UART_Init(&huart1) != HAL_OK)
+	      {
+	        ret = false;
+	      }
+	      else
+	      {
+	        ret = true;
+	        is_open[ch] = true;
+
+	        if(HAL_UART_Receive_IT(&huart1, &rx_data[0], 1) != HAL_OK)
+	        {
+	          ret = false;
+	        }
+
+
+	      }
+	      break;
 
 	  case 1:
 
 		  huart2.Instance = USART2;
-		  huart2.Init.BaudRate = 115200;
+		  huart2.Init.BaudRate = baud;
 		  huart2.Init.WordLength = UART_WORDLENGTH_8B;
 		  huart2.Init.StopBits = UART_STOPBITS_1;
 		  huart2.Init.Parity = UART_PARITY_NONE;
 		  huart2.Init.Mode = UART_MODE_TX_RX;
 		  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 		  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-		  if (HAL_UART_Init(&huart2) != HAL_OK)
-		  {
-			  ret = false;
-		  }
-		  else
-		  {
-			  ret         = true;
-			  is_open[ch] = true;
-		  }
+	      HAL_UART_DeInit(&huart2);
 
-		  break;
+	      qbufferCreate(&qbuffer[ch], &rx_buf[0], 256);
+
+	      if (HAL_UART_Init(&huart2) != HAL_OK)
+	      {
+	        ret = false;
+	      }
+	      else
+	      {
+	        ret = true;
+	        is_open[ch] = true;
+
+	        if(HAL_UART_Receive_IT(&huart2, &rx_data[1], 1) != HAL_OK)
+	        {
+	          ret = false;
+	        }
+
+
+	      }
+	      break;
 
 
 	}
@@ -88,14 +117,35 @@ bool uartOpen(uint8_t ch, uint32_t baud)
 uint32_t uartAvailable(uint8_t ch)
 {
 	uint32_t ret = 0;
+	  switch(ch)
+	  {
+	    case 0:
 
-	return ret;
+		  ret = qbufferAvailable(&qbuffer[ch]);
+	      break;
+
+	    case 1:
+
+	      ret = qbufferAvailable(&qbuffer[ch]);
+	      break;
+	  }
+
+	  return ret;
 }
 
 uint8_t uartRead(uint8_t ch)
 {
 	uint8_t ret = 0;
+	  switch(ch)
+	  {
+	    case 0:
+		  qbufferRead(&qbuffer[0], &ret, 1);
+	      break;
 
+	    case 1:
+	      qbufferRead(&qbuffer[1], &ret, 1);
+	      break;
+	  }
 	return ret;
 }
 
@@ -106,16 +156,22 @@ uint32_t uartWrite(uint8_t ch, uint32_t *p_data, uint32_t length)
 	switch(ch)
 	{
 	case 0:
+		status = HAL_UART_Transmit(&huart1, (uint8_t*)p_data, length, 100);
+		if(status == HAL_OK)
+		{
+			ret = length;
+		}
 		break;
 	case 1:
+		status = HAL_UART_Transmit(&huart2, (uint8_t*)p_data, length, 100);
+		if(status == HAL_OK)
+		{
+			ret = length;
+		}
 		break;
 
 	}
-	status = HAL_UART_Transmit(&huart2, (uint8_t*)p_data, length, 100);
-	if(status == HAL_OK)
-	{
-		ret = length;
-	}
+
 
 	return ret;
 
@@ -145,14 +201,36 @@ uint32_t uartGetBaud(uint8_t ch)
 	switch(ch)
 	{
 	case 0:
+		ret = huart1.Init.BaudRate;
 		break;
 	case 1:
+		ret = huart2.Init.BaudRate;
 		break;
 
 	}
-	ret = huart2.Init.BaudRate;
+
 
 	return ret;
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+  if(huart->Instance == USART1)
+  {
+	  qbufferWrite(&qbuffer[0], &rx_data[0], 1);
+
+	  HAL_UART_Receive_IT(&huart1, &rx_data[0], 1);
+  }
+
+  if(huart->Instance == USART2)
+  {
+	  qbufferWrite(&qbuffer[1], &rx_data[1], 1);
+
+	  HAL_UART_Receive_IT(&huart2, &rx_data[1], 1);
+  }
+
 }
 
 

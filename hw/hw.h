@@ -19,6 +19,8 @@
 #include "uart.h"
 #include "tmc2208.h"
 #include "IK.h"
+#include "cli.h"
+#include "my_touch.h"
 
 void hwInit(void);
 

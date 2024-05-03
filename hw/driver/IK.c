@@ -9,7 +9,7 @@
 
 #include "IK.h"
 #include "my_touch.h"
-
+#include "uart.h"
 
 
 //PID variables
@@ -246,7 +246,7 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
   		for(int i=0 ; i<3; i++){
   			float pTheta=cal_theta(i, ahz, anx, any);
-  			uartPrintf(1,"motor shaft angle: %f \r\n",pTheta);
+  			uartPrintf(1,"motor shaft angle: %f\n",pTheta);
   			pos[i]=round((angOrig - pTheta) * angToStep);
 
   			//moveTo()

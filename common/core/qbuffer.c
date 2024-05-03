@@ -37,13 +37,28 @@ bool qbufferWrite(qbuffer_t *p_node, uint8_t *p_data, uint32_t length)
 	bool ret = true;
 	// p_data에 값 입력, in증가
 	//조건은?
-	for(int i=0; i<length; i++)
-	{
-	p_node->p_buf[p_node->in] = p_data[i];
-	p_node->in = (p_node->in + 1) % p_node->len;
-	}
+	uint32_t next_in;
 
-	return ret;
+	  for (int i=0; i<length; i++)
+	  {
+	    next_in = (p_node->in + 1) % p_node->len;
+
+	    if (next_in != p_node->out)
+	    {
+	      if (p_node->p_buf != NULL)
+	      {
+	        p_node->p_buf[p_node->in] = p_data[i];
+	      }
+	      p_node->in = next_in;
+	    }
+	    else
+	    {
+	      ret = false;
+	      break;
+	    }
+	  }
+
+	  return ret;
 
 }
 bool qbufferRead(qbuffer_t *p_node, uint8_t *p_data, uint32_t length)
@@ -51,11 +66,25 @@ bool qbufferRead(qbuffer_t *p_node, uint8_t *p_data, uint32_t length)
 	bool ret = true;
 	//조건하에
 	//out에 해당하는 데이터를 p_data에 읽고, out 증가?
-	for(int i=0; i<length; i++)
-	{
-	p_data[i] = p_node->p_buf[p_node->out];
-	p_node->out = p_node->out + 1 % p_node->len;
-	}
+	  for (int i=0; i<length; i++)
+	  {
+	    if (p_node->p_buf != NULL)
+	    {
+	      p_data[i] = p_node->p_buf[p_node->out];
+	    }
+
+	    if (p_node->out != p_node->in)
+	    {
+	      p_node->out = (p_node->out + 1) % p_node->len;
+	    }
+	    else
+	    {
+	      ret = false;
+	      break;
+	    }
+	  }
+
+	  return ret;
 
 
 	return ret;

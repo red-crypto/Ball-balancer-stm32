@@ -13,9 +13,11 @@
 void hwInit(void)
 {
 	bspInit();
+	cliInit();
 
 	buttonInit();
 	ledInit();
 	uartInit();
 	tmcInit();
+	Touch_Init();
 }
