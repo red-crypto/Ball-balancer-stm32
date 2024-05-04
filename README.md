@@ -8,6 +8,7 @@ There are 3 changes :
  - Made the TMC2209 library applicable to TMC2208
  - Can control step motor using UART communication
  - Using a CLI to control ball balancer
+ - Improveed responsiveness by applying freeRTOS
 
 ## Video
 ![Project Logo](ball-balancer-test.gif)
@@ -16,6 +17,7 @@ There are 3 changes :
 - 2024-04-21 First Release
 - 2024-05-02 Refactoring
 - 2024-05-03 Add a CLI
+- 2024-05-04 Add a freeRTOS(soon)
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
