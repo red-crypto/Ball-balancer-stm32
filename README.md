@@ -7,6 +7,7 @@ There are 3 changes :
  - Recalculated the inverse kinematics for 3-RRS model
  - Made the TMC2209 library applicable to TMC2208
  - Can control step motor using UART communication
+ - Using a CLI to control ball balancer
 
 ## Video
 ![Project Logo](ball-balancer-test.gif)
@@ -14,6 +15,7 @@ There are 3 changes :
 ## Changelog
 - 2024-04-21 First Release
 - 2024-05-02 Refactoring
+- 2024-05-03 Add a CLI
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
