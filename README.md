@@ -12,7 +12,7 @@ There are 5 changes :
 
 ## Results
 
-![Project Logo](cliPic.png)
+![Project Logo](cliPic.PNG)
 ![Project Logo](ball-balancer-test.gif)
 
 ## Changelog
