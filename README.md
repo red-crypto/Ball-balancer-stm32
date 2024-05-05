@@ -20,6 +20,7 @@ There are 5 changes :
 - 2024-05-02 Refactoring
 - 2024-05-03 Add a CLI
 - 2024-05-04 Include freeRTOS
+- 2024-05-05 Bug fix
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
