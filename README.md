@@ -12,8 +12,8 @@ There are 5 changes :
 
 ## Results
 
-![Project Logo](cliPic.PNG)
 ![Project Logo](ball-balancer-test.gif)
+![Project Logo](cliPic.PNG)
 
 ## Changelog
 - 2024-04-21 First Release
