@@ -21,6 +21,7 @@
 #include "IK.h"
 #include "cli.h"
 #include "my_touch.h"
+#include "pattern.h"
 
 void hwInit(void);
 

@@ -18,20 +18,21 @@ void tmcInit(void)
 {
 	//tmc2209 init and uart3 init
 	  huart3.Instance = USART3;
-	  huart3.Init.BaudRate = 9600;
+	  huart3.Init.BaudRate = 19200;
 	  huart3.Init.WordLength = UART_WORDLENGTH_8B;
 	  huart3.Init.StopBits = UART_STOPBITS_1;
 	  huart3.Init.Parity = UART_PARITY_NONE;
 	  huart3.Init.Mode = UART_MODE_TX_RX;
 	  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 	  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+
 	  if (HAL_UART_Init(&huart3) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
 
 
-	  tmc2209_setup(&stepper_driver, 9600, SERIAL_ADDRESS_0);
+	  tmc2209_setup(&stepper_driver, 19200, SERIAL_ADDRESS_0);
 	  //enable_cool_step(&stepper_driver, 1, 0);
 	  tmc2209_enable(&stepper_driver);
 	  set_micro_steps_per_step(&stepper_driver, 256);
@@ -43,6 +44,7 @@ void tmcInit(void)
 	  set_stealth_chop_duration_threshold(&stepper_driver, 9999999);
 	  enable_inverse_motor_direction(&stepper_driver);
 	  move_using_step_dir_interface(&stepper_driver);
+
 
 }
 

@@ -12,8 +12,8 @@
 #include "uart.h"
 
 
-//PID variables
-double kp =0.408, ki = 0.000001, kd =3.2;   //kp =0.4, ki = 0.000001, kd =3.2; for 256,20us  kp =0.408, ki = 0.000002, kd =2.2; for 256,5us                             //PID constants
+//PID variables lasts kp =0.408, ki = 0.000001, kd =3.2
+const double kp =0.4, ki = 0.000001, kd =3.5;   //kp =0.4, ki = 0.000001, kd =3.2; for 256,20us  kp =0.408, ki = 0.000002, kd =2.2; for 256,5us                             //PID constants
 double error[2] = { 0, 0 }, errorPrev[2], integr[2] = { 0, 0 }, deriv[2] = { 0, 0 };  //PID terms for X and Y directions
 float out[2];
 static float xx = 0, yy = 0;
@@ -188,11 +188,11 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
 				currentPos[i]+=1;
 
-		  		   HAL_GPIO_WritePin(GPIOA, MOTOR_B_DIR_Pin, 0);
+		  		   HAL_GPIO_WritePin(MOTOR_B_DIR_GPIO_Port, MOTOR_B_DIR_Pin, 0);
 		  		   // Generate a pulse on the STEP pin
-		  		   HAL_GPIO_WritePin(GPIOA, MOTOR_B_STEP_Pin, 1);
+		  		   HAL_GPIO_WritePin(MOTOR_B_STEP_GPIO_Port, MOTOR_B_STEP_Pin, 1);
 		  		   delay_us(spd); // 200ns setup time
-		  		   HAL_GPIO_WritePin(GPIOA, MOTOR_B_STEP_Pin, 0);
+		  		   HAL_GPIO_WritePin(MOTOR_B_STEP_GPIO_Port, MOTOR_B_STEP_Pin, 0);
 
 
 			}
@@ -200,11 +200,11 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
 				currentPos[i]-=1;
 
-	  			   HAL_GPIO_WritePin(GPIOA, MOTOR_B_DIR_Pin, 1);
+	  			   HAL_GPIO_WritePin(MOTOR_B_DIR_GPIO_Port, MOTOR_B_DIR_Pin, 1);
 	  			   // Generate a pulse on the STEP pin
-	  			   HAL_GPIO_WritePin(GPIOA, MOTOR_B_STEP_Pin, 1);
+	  			   HAL_GPIO_WritePin(MOTOR_B_STEP_GPIO_Port, MOTOR_B_STEP_Pin, 1);
 	  			   delay_us(spd); // 200ns setup time
-	  			   HAL_GPIO_WritePin(GPIOA, MOTOR_B_STEP_Pin, 0);
+	  			   HAL_GPIO_WritePin(MOTOR_B_STEP_GPIO_Port, MOTOR_B_STEP_Pin, 0);
 
 
 
@@ -274,6 +274,7 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
   				if(flag[j]!=1){
 				step(j,20,256); // default : 20us (datasheet : 20ns)
+
   				}
 
 				j++;
@@ -314,11 +315,12 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
       }
 
-      SetMoveTo(height, out[0],out[1],20);//height 108
+      SetMoveTo(height, out[0],out[1],10);//height 108
 
   	}
 
 
-  }
+}
+
 
 

@@ -20,5 +20,4 @@ void SetMoveTo(double hz, double nx, double ny,int timeOut);
 void PID(double height,double setPointX, double setPointY);
 
 
-
 #endif /* SRC_COMMON_IK_H_ */

@@ -16,7 +16,7 @@ void hwInit(void)
 	cliInit();
 
 	buttonInit();
-	ledInit();
+	//ledInit();
 	uartInit();
 	tmcInit();
 	Touch_Init();

@@ -31,8 +31,47 @@ void bspInit(void)
 	  timInit();
 	  HAL_TIM_Base_Start(&htim1);
 
+      GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+      /*Configure GPIO pin Output Level */
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1|GPIO_PIN_2|MOTOR_B_DIR_Pin|MOTOR_B_STEP_Pin, GPIO_PIN_RESET);
 
+      /*Configure GPIO pin Output Level */
+      HAL_GPIO_WritePin(GPIOA, MOT_EN_Pin|LD2_Pin|MOTOR_C_STEP_Pin|MOTOR_C_DIR_Pin, GPIO_PIN_RESET);
+
+      /*Configure GPIO pin Output Level */
+      HAL_GPIO_WritePin(GPIOB, MOTOR_A_DIR_Pin|MOTOR_A_STEP_Pin, GPIO_PIN_RESET);
+
+      /*Configure GPIO pin : PtPin */
+      GPIO_InitStruct.Pin = B1_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+      /*Configure GPIO pins : PC1 PC2 PCPin PCPin */
+      GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|MOTOR_B_DIR_Pin|MOTOR_B_STEP_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+      /*Configure GPIO pins : PAPin PAPin PAPin PAPin */
+      GPIO_InitStruct.Pin = MOT_EN_Pin|LD2_Pin|MOTOR_C_STEP_Pin|MOTOR_C_DIR_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+      /*Configure GPIO pins : PBPin PBPin */
+      GPIO_InitStruct.Pin = MOTOR_A_DIR_Pin|MOTOR_A_STEP_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+      /* EXTI interrupt init*/
+      HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+      HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

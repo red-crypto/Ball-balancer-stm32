@@ -46,6 +46,10 @@ uint32_t cliAvailable(void);
 uint8_t  cliRead(void);
 uint32_t cliWrite(uint8_t *p_data, uint32_t length);
 
+
+
+
+void threadOnce(void const *argument);
 #endif
 
 #endif /* SRC_COMMON_HW_INCLUDE_CLI_H_ */

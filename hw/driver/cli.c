@@ -10,7 +10,14 @@
 #include "cli.h"
 #include "uart.h"
 #include "IK.h"
+#include "tim.h"
+#include "cmsis_os.h"
+#include "mutex.h"
+#include "my_touch.h"
+#include "ap.h"
 
+extern TIM_HandleTypeDef htim3;
+extern osThreadId Thread1Handle;
 #ifdef _USE_HW_CLI
 
 
@@ -24,6 +31,10 @@
 #define CLI_KEY_DOWN              0x42
 #define CLI_KEY_HOME              0x31
 #define CLI_KEY_END               0x34
+
+#define CLI_KEY_PLUS              0x2B
+#define CLI_KEY_MINUS             0x2D
+
 
 #define CLI_PROMPT_STR            "cli# "
 
@@ -109,6 +120,14 @@ void cliShowList(cli_args_t *args);
 void cliMemoryDump(cli_args_t *args);
 void cliHome(cli_args_t *args);
 
+void cliLinePattern(cli_args_t *args);
+void cliTriPattern(cli_args_t *args);
+void cliBunnyHop(cli_args_t *args);
+
+
+void threadOnce(void const *argument);
+
+
 bool cliInit(void)
 {
   cli_node.is_open = false;
@@ -128,12 +147,16 @@ bool cliInit(void)
   cliLineClean(&cli_node);
 
 
-  cliAdd("help", cliShowList);
-  cliAdd("md"  , cliMemoryDump);
-  cliAdd("home", cliHome);
+  cliAdd("help"    , cliShowList);
+  cliAdd("md"      , cliMemoryDump);
+  cliAdd("home"    , cliHome);
+  cliAdd("line"    , cliLinePattern);
+  cliAdd("tri"     , cliTriPattern);
+  cliAdd("bunnyhop", cliBunnyHop);
 
   return true;
 }
+
 
 bool cliOpen(uint8_t ch, uint32_t baud)
 {
@@ -255,8 +278,14 @@ bool cliUpdate(cli_t *p_cli, uint8_t rx_data)
       case CLI_KEY_ESC:
         p_cli->state = CLI_RX_SP1;
         break;
+/////////////////////////////////////////////////////
+      case CLI_KEY_PLUS:
 
+        	cliPrintf("PLUS\n");
+            cliShowPrompt(p_cli);
 
+        break;
+/////////////////////////////////////////////////////
       // DEL
       //
       case CLI_KEY_DEL:
@@ -377,9 +406,9 @@ bool cliUpdate(cli_t *p_cli, uint8_t rx_data)
         {
           line->cursor++;
 
-          tx_buf[0] = 0x1B;
-          tx_buf[1] = 0x5B;
-          tx_buf[2] = rx_data;
+          tx_buf[0] = 0x1B;    //ESC
+          tx_buf[1] = 0x5B;    //[
+          tx_buf[2] = rx_data; //C
           uartWrite(p_cli->ch, (uint32_t*)tx_buf, 3);
         }
       }
@@ -430,7 +459,7 @@ bool cliUpdate(cli_t *p_cli, uint8_t rx_data)
 
 
 
-  cliShowLog(p_cli);
+  //cliShowLog(p_cli);
 
   return ret;
 }
@@ -706,6 +735,7 @@ bool cliAdd(const char *cmd_str, void (*p_func)(cli_args_t *))
 
 void cliShowList(cli_args_t *args)
 {
+
   cli_t *p_cli = &cli_node;
 
 
@@ -719,6 +749,7 @@ void cliShowList(cli_args_t *args)
   }
 
   cliPrintf("-----------------------------\r\n");
+
 }
 
 void cliMemoryDump(cli_args_t *args)
@@ -782,8 +813,104 @@ void cliMemoryDump(cli_args_t *args)
 
 void cliHome(cli_args_t *args)
 {
-    cliPrintf("Move to Home\n");
-	SetMoveTo(108, 0, 0, 1000);
+	gdFlag=1;
+	//TickType_t xDelay = 1000 / portTICK_PERIOD_MS ;
+	//vTaskDelay(pdMS_TO_TICKS(1000));
+//	osMutexWait(myMutexHandle, 100);
+//	osMutexRelease(myMutexHandle);
+//	osThreadYield();
+	//vTaskDelay(xDelay);
+
 }
+
+void cliLinePattern(cli_args_t *args)
+{
+	gdFlag=2;
+			//PID(108,-10,50);
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,-10,50);
+//    			delay(1);
+//    	    }
+//    		//HAL driver 반복 호출로 thread 선점에 문제 발생
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,-10,0);
+//    			delay(1);
+//    		}
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,-10,-50);
+//    			delay(1);
+//    		}
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,-10,0);
+//    			delay(1);
+//    		}
+
+}
+void cliTriPattern(cli_args_t *args)
+{
+	gdFlag=3;
+//	wait=1000;
+//	timeII=mills();
+//	while(mills()-timeII<wait)
+//		{
+//			PID(108,-10,0);
+//		}
+//    	for(int i=0;i<2;i++)
+//    	{
+//
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,-30,0);
+//    		}
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,20,50);
+//    		}
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,20,0);
+//    		}
+//    		timeII=mills();
+//    		while(mills()-timeII<wait)
+//    		{
+//    			PID(108,20,-50);
+//    		}
+//
+//    	}
+}
+void cliBunnyHop(cli_args_t *args)
+{
+	gdFlag=4;
+//    	for(int i=0;i<10;i++)
+//    	{
+//    		timeII=mills();
+//    		while(mills()-timeII<1000)
+//    		{
+//    			PID(108,-10,0);
+//    		}
+//
+//    			SetMoveTo(80,-10,0,50);//height 80
+//    			SetMoveTo(108,-10,0,50);//height 108
+//
+//        		timeII=mills();
+//        		while(mills()-timeII<1000)
+//    		{
+//    			PID(108,-10,0);
+//    		}
+//
+//    	}
+}
+
 
 #endif
