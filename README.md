@@ -22,6 +22,7 @@ There are 5 changes :
 - 2024-05-04 Include freeRTOS
 - 2024-05-05 Bug fix
 - 2024-05-08 Bug fix(freeRTOS thread)
+- 2024-05-13 Add a Joystick Controller, and Accel/Decel
 
 ## Acknowledgements
 - Main concept inspired by the [aaedmusa] Ball-Balancer-V2
