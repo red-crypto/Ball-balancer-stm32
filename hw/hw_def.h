@@ -29,9 +29,11 @@
 
 #define _HW_DEF_RTOS_THREAD_PRT_MAIN     osPriorityNormal
 #define _HW_DEF_RTOS_THREAD_PRT_PID      osPriorityNormal//osPriorityRealtime
+#define _HW_DEF_RTOS_THREAD_PRT_JOY      osPriorityNormal//osPriorityRealtime
 
 #define _HW_DEF_RTOS_THREAD_MEM_MAIN     _HW_DEF_RTOS_MEM_SIZE( 2*1024)
 #define _HW_DEF_RTOS_THREAD_MEM_PID      _HW_DEF_RTOS_MEM_SIZE( 2*1024)
+#define _HW_DEF_RTOS_THREAD_MEM_JOY      _HW_DEF_RTOS_MEM_SIZE(   1024)
 
 
 #endif /* SRC_HW_HW_DEF_H_ */

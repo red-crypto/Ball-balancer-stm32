@@ -13,7 +13,7 @@
 
 
 //PID variables lasts kp =0.408, ki = 0.000001, kd =3.2
-const double kp =0.4, ki = 0.000001, kd =3.5;   //kp =0.4, ki = 0.000001, kd =3.2; for 256,20us  kp =0.408, ki = 0.000002, kd =2.2; for 256,5us                             //PID constants
+const double kp =0.408, ki = 0.000001, kd =3.2;   //kp =0.4, ki = 0.000001, kd =3.2; for 256,20us  kp =0.408, ki = 0.000002, kd =2.2; for 256,5us                             //PID constants
 double error[2] = { 0, 0 }, errorPrev[2], integr[2] = { 0, 0 }, deriv[2] = { 0, 0 };  //PID terms for X and Y directions
 float out[2];
 static float xx = 0, yy = 0;
@@ -23,6 +23,17 @@ int pos[3]={ 0 , 0 , 0 };
 int j=0;
 double angToStep = 142.2; //200/360*microsteps , ex)16->8.89 32->17.78 128->71.1 256->142.2
 double angOrig = 206.66;
+
+//Accel/Decel variables
+int n=0;
+float cn=0;
+float c0=0;
+float stepInterval[3]= {0, 0, 0};
+int intStepInterval[3] = {0, 0, 0};
+float speed=1000;
+float accel=30000;
+float stepAngle=0;
+
 //Calculation Variables
 float theta;
 float ix=0;
@@ -239,10 +250,16 @@ float cal_theta(int leg, float O7z, float pax, float pay){
 
 
   }
+
+
+
   void SetMoveTo(double hz, double nx, double ny,int timeOut){
 	  float ahz=(float)hz;
 	  float anx=(float)nx;
 	  float any=(float)ny;
+
+		stepAngle= 0.0001226; //1.8deg -> rad / 256steps
+		c0 = 0.676 * sqrt((2.0*stepAngle) / accel) * 1000000; // Equation 15
 
   		for(int i=0 ; i<3; i++){
   			float pTheta=cal_theta(i, ahz, anx, any);
@@ -255,30 +272,64 @@ float cal_theta(int leg, float O7z, float pax, float pay){
   		//run();
   			//runSpeed();
   	  int timeInt=mills();//60000->1ms
-  			while(mills()-timeInt<timeOut){
+  			while(mills()-timeInt<timeOut)
+  			{
 				//computeNewSpeed()
 				distanceToGo[j]=targetPos[j]-currentPos[j];
 
-				if(distanceToGo[j] == 0){
+				if(distanceToGo[j] == 0)
+				{
 					flag[j]=1;
 
 				}
-				else if(distanceToGo[j]>0){
+				else if(distanceToGo[j]>0)
+				{
 					direction[j]=0;
 					flag[j]=0;
 				}
-				else {
+				else
+				{
 					direction[j]=1;
 					flag[j]=0;
 				}
 
-  				if(flag[j]!=1){
+  				if(flag[j]!=1)
+  				{
+  				//time=micros()
+  				//if time-pretime>=stepinterval
 				step(j,20,256); // default : 20us (datasheet : 20ns)
 
+				//////////////////////////////////////accel/decl
+
+//				if(n==0)
+//				{
+//					cn=c0;
+//
+//				}
+//				else
+//				{
+//					cn=cn-((2*cn)/((4*n)+1));
+//				}
+//
+//				stepInterval[j] = cn; //6ms->3ms->2.5ms->...
+//
+//				intStepInterval[j] = (int)(stepInterval[j]);
+//				n++;
+//				delay_us(intStepInterval[j]);
+
+				//////////////////////////////////////////
+
+  				}
+  				else
+  				{
+  					//distance==target
   				}
 
 				j++;
-				if(j>2)j=0;
+				if(j>2)
+				{
+					j=0;
+				}
 
   			}
   			//reset flags

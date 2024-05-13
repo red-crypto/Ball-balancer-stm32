@@ -891,7 +891,7 @@ void cliTriPattern(cli_args_t *args)
 }
 void cliBunnyHop(cli_args_t *args)
 {
-	gdFlag=4;
+	gdFlag=5;
 //    	for(int i=0;i<10;i++)
 //    	{
 //    		timeII=mills();

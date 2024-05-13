@@ -7,12 +7,15 @@
 
 #include "ap.h"
 #include "mutex.h"
-
+#include "my_touch.h"
 
 void threadMain(void const *argument);
 void threadPID(void const *argument);
+void threadJoy(void const *argument);
 
 uint8_t gdFlag=0;
+extern ADC_HandleTypeDef hadc2;
+
 
 void apInit(void)
 {
@@ -64,6 +67,19 @@ void apInit(void)
 	    while(1);
 	   }
 
+	  osThreadDef(threadJoy, threadJoy, _HW_DEF_RTOS_THREAD_PRT_JOY, 0, _HW_DEF_RTOS_THREAD_MEM_JOY);
+	  if (osThreadCreate(osThread(threadJoy), NULL) != NULL)
+	  {
+
+	    uartPrintf(1, "threadJoy \t\t: OK\r\n");
+	    uartPrintf(1,"\r\n");
+	   }
+	   else
+	   {
+	    uartPrintf(1, "threadJoy \t\t: fail\r\n");
+	    uartPrintf(1,"\r\n");
+	    while(1);
+	   }
 
 
 }
@@ -177,6 +193,10 @@ void threadPID(void const *argument)
 		    }
 			gdFlag=0;
 		}
+		else if(gdFlag == 5)
+		{
+			PID(108, joyX, joyY);
+		}
 //		if(xTaskGetTickCount() - pretime > 1000)
 //		{
 //		uartPrintf(1, "PID is working on...\n");
@@ -189,5 +209,29 @@ void threadPID(void const *argument)
 
 }
 
+void threadJoy(void const *argument)
+{
 
+	UNUSED(argument);
+	while(1)
+	{
+		osMutexWait(myMutexHandle, portMAX_DELAY);
+		HAL_ADC_MspInit(&hadc2);
+//		joyRead(&hadc2);
+        HAL_ADC_Start(&hadc2);
+        HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+        volatile float tempjoyX = HAL_ADC_GetValue(&hadc2);
+        joyX = (int)((tempjoyX / 4095.0)*100);
+        joyX = joyX - 50;
+        volatile float tempjoyY = HAL_ADC_GetValue(&hadc2);
+        joyY = (int)((tempjoyY / 4095.0)*100);
+        joyY = joyY - 50;
+        HAL_ADC_Stop(&hadc2);
+		HAL_ADC_MspDeInit(&hadc2);
+		osMutexRelease(myMutexHandle);
+		osThreadYield();
+
+	}
+
+}
 

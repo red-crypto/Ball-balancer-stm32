@@ -20,4 +20,5 @@ void hwInit(void)
 	uartInit();
 	tmcInit();
 	Touch_Init();
+	joyInit();
 }

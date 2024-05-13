@@ -13,7 +13,7 @@
 #include "hw.h"
 
 extern uint8_t gdFlag;
-
+extern int joyX,joyY;
 
 
 void apInit(void);
